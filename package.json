@@ -1,12 +1,12 @@
 {
   "name": "@ayomide-philip/skills",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Install production-ready AI agent skills into Antigravity, Gemini CLI, Claude Code, Cursor, and more.",
   "type": "module",
-  "main": "bin/cli.js",
+  "main": "bin/skills.js",
   "bin": {
-    "agent-skills": "bin/cli.js",
-    "skills": "bin/cli.js"
+    "skills": "./bin/skills.js",
+    "agent-skills": "./bin/agent-skills.js"
   },
   "files": [
     "bin",

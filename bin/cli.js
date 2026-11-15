@@ -43,18 +43,32 @@ function getAvailableSkills() {
   return skills;
 }
 
+// Check for ~/.agents vs ~/.agent
+function getSystemAgentsFolder() {
+  const home = os.homedir();
+  if (fs.existsSync(path.join(home, ".agents"))) {
+    return path.join(home, ".agents");
+  }
+  if (fs.existsSync(path.join(home, ".agent"))) {
+    return path.join(home, ".agent");
+  }
+  return path.join(home, ".agents");
+}
+
 function printHelp() {
+  const sysFolder = path.basename(getSystemAgentsFolder());
   console.log(`
 ${color.bold}${color.cyan}Agent Skills Installer${color.reset}
 Install production-grade AI agent skills for Antigravity, Claude Code, Cursor, and more.
 
 ${color.bold}USAGE:${color.reset}
-  ${color.green}npx agent-skills${color.reset}                        Interactive wizard
-  ${color.green}npx agent-skills add <skill>${color.reset}            Install a specific skill
-  ${color.green}npx agent-skills list${color.reset}                   List all available skills in this package
+  ${color.green}npx @ayomide-philip/skills${color.reset}               Interactive wizard
+  ${color.green}npx @ayomide-philip/skills add <skill>${color.reset}   Install a specific skill
+  ${color.green}npx @ayomide-philip/skills list${color.reset}          List all available skills in this package
 
 ${color.bold}TARGET OPTIONS:${color.reset}
-  ${color.yellow}--global, -g${color.reset}         Install to Antigravity global (${color.dim}~/.gemini/antigravity/skills/<skill>${color.reset})
+  ${color.yellow}--global, -g${color.reset}         Install to System Global (${color.dim}~/${sysFolder}/skills/<skill>${color.reset}) [default global]
+  ${color.yellow}--antigravity${color.reset}        Install to Antigravity global (${color.dim}~/.gemini/antigravity/skills/<skill>${color.reset})
   ${color.yellow}--claude-global${color.reset}      Install to Claude Code global (${color.dim}~/.claude/skills/<skill>${color.reset})
   ${color.yellow}--workspace, -w${color.reset}      Install to project workspace (${color.dim}./.agent/skills/<skill>${color.reset})
   ${color.yellow}--claude${color.reset}             Install to local project Claude (${color.dim}./.claude/skills/<skill>${color.reset})
@@ -63,10 +77,10 @@ ${color.bold}TARGET OPTIONS:${color.reset}
   ${color.yellow}--force, -f${color.reset}            Overwrite destination if it already exists
 
 ${color.bold}EXAMPLES:${color.reset}
-  $ npx agent-skills add prd
-  $ npx agent-skills add prd --global
-  $ npx agent-skills add prd --claude
-  $ npx agent-skills add prd --dest ./my-custom-skills
+  $ npx @ayomide-philip/skills add prd --global
+  $ npx @ayomide-philip/skills add prd --workspace
+  $ npx @ayomide-philip/skills add prd --claude
+  $ npx @ayomide-philip/skills add prd --dest ./my-custom-skills
 `);
 }
 
@@ -101,10 +115,14 @@ function copyRecursiveSync(src, dest) {
 function resolveTargetDir(targetType, skillName, customPath) {
   const cwd = process.cwd();
   const home = os.homedir();
+  const systemAgentsFolder = getSystemAgentsFolder();
 
   switch (targetType) {
+    case "system-global":
     case "global":
+      return path.join(systemAgentsFolder, "skills", skillName);
     case "antigravity-global":
+    case "antigravity":
       return path.join(home, ".gemini", "antigravity", "skills", skillName);
     case "claude-global":
       return path.join(home, ".claude", "skills", skillName);
@@ -161,7 +179,14 @@ async function installSkill(skillName, targetType, customPath, force) {
   );
 
   console.log(`${color.bold}Next steps:${color.reset}`);
-  if (targetType === "global" || targetType === "antigravity-global") {
+  if (targetType === "system-global" || targetType === "global") {
+    console.log(
+      `  • The skill is now active globally across all agents reading from your system skills directory (${color.cyan}${path.dirname(targetDir)}${color.reset}).`,
+    );
+  } else if (
+    targetType === "antigravity-global" ||
+    targetType === "antigravity"
+  ) {
     console.log(
       `  • The skill is now active globally across all your Antigravity agent sessions.`,
     );
@@ -205,47 +230,53 @@ async function runInteractive() {
     console.log(`Selected skill: ${color.green}${selectedSkill}${color.reset}`);
   }
 
+  const sysFolder = path.basename(getSystemAgentsFolder());
+
   console.log(
     `\n${color.bold}Where would you like to install '${selectedSkill}'?${color.reset}\n`,
   );
   console.log(
-    `  ${color.bold}${color.magenta}GLOBAL (Available across all projects on this machine):${color.reset}`,
+    `  ${color.bold}${color.magenta}SYSTEM GLOBAL (Available across all projects on your machine):${color.reset}`,
   );
   console.log(
-    `  [1] Antigravity Global (${color.dim}~/.gemini/antigravity/skills/${selectedSkill}${color.reset})`,
+    `  [1] System Global (${color.dim}~/${sysFolder}/skills/${selectedSkill}${color.reset}) ${color.green}(Recommended Global)${color.reset}`,
   );
   console.log(
-    `  [2] Claude Code Global (${color.dim}~/.claude/skills/${selectedSkill}${color.reset})\n`,
+    `  [2] Antigravity Global (${color.dim}~/.gemini/antigravity/skills/${selectedSkill}${color.reset})`,
+  );
+  console.log(
+    `  [3] Claude Code Global (${color.dim}~/.claude/skills/${selectedSkill}${color.reset})\n`,
   );
 
   console.log(
     `  ${color.bold}${color.blue}LOCAL PROJECT (Current workspace directory only):${color.reset}`,
   );
   console.log(
-    `  [3] Project Workspace (${color.dim}./.agent/skills/${selectedSkill}${color.reset}) ${color.green}(Recommended for repos)${color.reset}`,
+    `  [4] Project Workspace (${color.dim}./.agent/skills/${selectedSkill}${color.reset}) ${color.green}(Recommended for repos)${color.reset}`,
   );
   console.log(
-    `  [4] Claude Code Local (${color.dim}./.claude/skills/${selectedSkill}${color.reset})`,
+    `  [5] Claude Code Local (${color.dim}./.claude/skills/${selectedSkill}${color.reset})`,
   );
   console.log(
-    `  [5] Cursor / Windsurf Rules (${color.dim}./.cursor/rules/${selectedSkill}${color.reset})\n`,
+    `  [6] Cursor / Windsurf Rules (${color.dim}./.cursor/rules/${selectedSkill}${color.reset})\n`,
   );
 
   console.log(`  ${color.bold}CUSTOM:${color.reset}`);
-  console.log(`  [6] Custom Path...`);
+  console.log(`  [7] Custom Path...`);
 
   const targetChoice = await prompt(
-    `\nChoose target destination (1-6) [default 1]: `,
+    `\nChoose target destination (1-7) [default 1]: `,
   );
-  let targetType = "global";
+  let targetType = "system-global";
   let customPath = "";
 
-  if (targetChoice === "1" || targetChoice === "") targetType = "global";
-  else if (targetChoice === "2") targetType = "claude-global";
-  else if (targetChoice === "3") targetType = "workspace";
-  else if (targetChoice === "4") targetType = "claude";
-  else if (targetChoice === "5") targetType = "cursor";
-  else if (targetChoice === "6") {
+  if (targetChoice === "1" || targetChoice === "") targetType = "system-global";
+  else if (targetChoice === "2") targetType = "antigravity-global";
+  else if (targetChoice === "3") targetType = "claude-global";
+  else if (targetChoice === "4") targetType = "workspace";
+  else if (targetChoice === "5") targetType = "claude";
+  else if (targetChoice === "6") targetType = "cursor";
+  else if (targetChoice === "7") {
     targetType = "custom";
     customPath = await prompt(
       `Enter custom relative or absolute folder path: `,
@@ -272,12 +303,12 @@ async function main() {
       console.log(`  • ${color.green}${skill}${color.reset}`);
     }
     console.log(
-      `\nRun ${color.cyan}npx agent-skills add <skill>${color.reset} to install.\n`,
+      `\nRun ${color.cyan}npx @ayomide-philip/skills add <skill>${color.reset} to install.\n`,
     );
     return;
   }
 
-  let targetType = "workspace";
+  let targetType = "system-global";
   let customPath = "";
   let force = false;
   let skillToInstall = null;
@@ -288,7 +319,9 @@ async function main() {
       skillToInstall = args[i + 1];
       i++;
     } else if (arg === "--global" || arg === "-g") {
-      targetType = "global";
+      targetType = "system-global";
+    } else if (arg === "--antigravity") {
+      targetType = "antigravity-global";
     } else if (arg === "--claude-global") {
       targetType = "claude-global";
     } else if (arg === "--workspace" || arg === "-w") {

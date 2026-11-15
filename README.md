@@ -74,11 +74,14 @@ npx @ayomide-philip/skills
 Or install non-interactively using target flags:
 
 ```bash
-# Add PRD skill to your current project (.agent/skills/prd)
-npx @ayomide-philip/skills add prd
-
-# Add globally for Antigravity (~/.gemini/antigravity/skills/prd)
+# Add to System Global (~/.agents/skills/prd)
 npx @ayomide-philip/skills add prd --global
+
+# Add to Antigravity Global (~/.gemini/antigravity/skills/prd)
+npx @ayomide-philip/skills add prd --antigravity
+
+# Add to current project workspace (.agent/skills/prd)
+npx @ayomide-philip/skills add prd --workspace
 
 # Add for Claude Code (.claude/skills/prd)
 npx @ayomide-philip/skills add prd --claude

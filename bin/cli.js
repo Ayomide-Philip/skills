@@ -208,20 +208,7 @@ async function runInteractive() {
   await installSkill(selectedSkill, targetType, customPath, false);
 }
 
-  const targetChoice = await prompt(`\nChoose target destination (1-5) [default 1]: `);
-  let targetType = 'workspace';
-  let customPath = '';
 
-  if (targetChoice === '2') targetType = 'global';
-  else if (targetChoice === '3') targetType = 'claude';
-  else if (targetChoice === '4') targetType = 'cursor';
-  else if (targetChoice === '5') {
-    targetType = 'custom';
-    customPath = await prompt(`Enter custom relative or absolute folder path: `);
-  }
-
-  await installSkill(selectedSkill, targetType, customPath, false);
-}
 
 async function main() {
   const args = process.argv.slice(2);

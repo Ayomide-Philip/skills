@@ -52,5 +52,6 @@ Concrete reference PRDs illustrating each scope tier are available in `examples/
 - `examples/01-light-tier-example.md`: Fast, focused Light Tier PRD for small tools or scripts.
 - `examples/02-standard-feature-spec-example.md`: Standard Tier feature spec adding capabilities to an existing codebase.
 - `examples/03-full-tier-prd-example.md`: Comprehensive Full Tier PRD for multi-role greenfield platforms.
+- `examples/04-personal-portfolio-example.md`: Standard Tier greenfield PRD for a Next.js & Tailwind CSS personal portfolio.
 - `examples/README.md`: Overview guide and comparison matrix across all tiers.
 

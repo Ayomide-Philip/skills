@@ -65,29 +65,29 @@ skills/
 
 ### Option 1: One-Line Install via `npx` (Interactive CLI)
 
-Run the guided installer directly:
+Run the guided installer directly (using `@latest` ensures `npx` always pulls the freshest skills and avoids stale local cache):
 
 ```bash
-npx @ayomide-philip/skills
+npx @ayomide-philip/skills@latest
 ```
 
 Or install non-interactively using target flags:
 
 ```bash
-# Add to System Global (~/.agents/skills/prd)
-npx @ayomide-philip/skills add prd --global
-
 # Add to Antigravity Global (~/.gemini/antigravity/skills/prd)
-npx @ayomide-philip/skills add prd --antigravity
+npx @ayomide-philip/skills@latest add prd --antigravity
 
 # Add to current project workspace (.agent/skills/prd)
-npx @ayomide-philip/skills add prd --workspace
+npx @ayomide-philip/skills@latest add prd --workspace
+
+# Add to System Global (~/.agents/skills/prd)
+npx @ayomide-philip/skills@latest add prd --global
 
 # Add for Claude Code (.claude/skills/prd)
-npx @ayomide-philip/skills add prd --claude
+npx @ayomide-philip/skills@latest add prd --claude
 
 # Add for Cursor rules (.cursor/rules/prd)
-npx @ayomide-philip/skills add prd --cursor
+npx @ayomide-philip/skills@latest add prd --cursor
 ```
 
 ---
@@ -176,6 +176,7 @@ Explore the [`prd/examples/`](./prd/examples/) directory to see real reference d
 - **[Light Tier Example](./prd/examples/01-light-tier-example.md):** `quickclip` — A fast, zero-config CLI markdown link and note clipper.
 - **[Standard Tier Feature Spec](./prd/examples/02-standard-feature-spec-example.md):** Scoped API Key Management & Revocation for an existing observability platform.
 - **[Full Tier Greenfield PRD](./prd/examples/03-full-tier-prd-example.md):** `PulseLog` — Real-time developer incident triage and sprint health platform with WebSockets, RBAC, and Prisma data models.
+- **[Standard Tier Greenfield PRD](./prd/examples/04-personal-portfolio-example.md):** `DevFolio` — Modern developer personal portfolio & technical blog built with Next.js App Router, Tailwind CSS, local MDX, and serverless contact pipeline.
 
 ---
 

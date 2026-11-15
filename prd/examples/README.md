@@ -13,6 +13,7 @@ These examples illustrate how output structure, detail level, and validation dep
 | [`01-light-tier-example.md`](./01-light-tier-example.md)                       |  **Light**   | Greenfield CLI / Micro-App | Small scripts, single-purpose CLI utilities, quick prototype features. No heavy governance.                               |
 | [`02-standard-feature-spec-example.md`](./02-standard-feature-spec-example.md) | **Standard** | Existing Codebase Feature  | Adding a distinct capability (e.g., API key management) to an existing product without duplicating root context.          |
 | [`03-full-tier-prd-example.md`](./03-full-tier-prd-example.md)                 |   **Full**   | Multi-Role Greenfield SaaS | Large platforms, multi-tenant systems, enterprise apps with strict RBAC, data schemas, API contracts, and MoSCoW scoping. |
+| [`04-personal-portfolio-example.md`](./04-personal-portfolio-example.md)       | **Standard** | Greenfield Web Application | Personal developer portfolio and technical blog built with Next.js, Tailwind CSS, local MDX, and serverless contact flow.  |
 
 ---
 

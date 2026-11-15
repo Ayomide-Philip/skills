@@ -1,0 +1,41 @@
+{
+  "name": "@ayomide-philip/skills",
+  "version": "1.0.0",
+  "description": "Install production-ready AI agent skills into Antigravity, Gemini CLI, Claude Code, Cursor, and more.",
+  "type": "module",
+  "main": "bin/cli.js",
+  "bin": {
+    "agent-skills": "./bin/cli.js",
+    "skills": "./bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "prd",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "agent-skills",
+    "antigravity",
+    "gemini",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "prd",
+    "skills",
+    "ai-agent"
+  ],
+  "author": "Ayomide Philip",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ayomide-Philip/skills.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Ayomide-Philip/skills/issues"
+  },
+  "homepage": "https://github.com/Ayomide-Philip/skills#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

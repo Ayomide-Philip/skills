@@ -3,7 +3,7 @@
 > Production-grade, battle-tested skills for AI coding agents (Antigravity, Gemini CLI, Claude Code, Cursor, Windsurf, and custom agent harnesses).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Skills Standard](https://img.shields.io/badge/Standard-Agent_Skills_v1-green.svg)](https://github.com)
+[![Skills Standard](https://img.shields.io/badge/Standard-Agent_Skills_v1-green.svg)](https://github.com/Ayomide-Philip/skills)
 [![PRDs Generated](https://img.shields.io/badge/PRD_Tiers-Light_|_Standard_|_Full-orange.svg)](prd/)
 
 ---
@@ -62,36 +62,57 @@ skills/
 
 ## Quick Start & Installation
 
-### Option 1: Google Antigravity & Gemini CLI
+### Option 1: One-Line Install via `npx` (Interactive CLI)
 
-#### Global Installation (Available across all workspaces)
-Clone or copy the skills into your global agent skills directory:
-
-**macOS / Linux:**
-```bash
-git clone https://github.com/your-org/skills.git ~/.gemini/antigravity/skills
-```
-
-**Windows (PowerShell):**
-```powershell
-git clone https://github.com/your-org/skills.git $HOME\.gemini\antigravity\skills
-```
-
-#### Workspace-Specific Installation
-Copy the skill directory into your project's local `.agent/skills/` or `.gemini/skills/` folder:
+Run the guided installer directly:
 
 ```bash
-mkdir -p .agent/skills
-cp -r /path/to/skills/prd .agent/skills/prd
+npx @ayomide-philip/skills
+```
+
+Or install non-interactively using target flags:
+
+```bash
+# Add PRD skill to your current project (.agent/skills/prd)
+npx @ayomide-philip/skills add prd
+
+# Add globally for Antigravity (~/.gemini/antigravity/skills/prd)
+npx @ayomide-philip/skills add prd --global
+
+# Add for Claude Code (.claude/skills/prd)
+npx @ayomide-philip/skills add prd --claude
+
+# Add for Cursor rules (.cursor/rules/prd)
+npx @ayomide-philip/skills add prd --cursor
 ```
 
 ---
 
-### Option 2: Claude Code, Cursor, Windsurf, & Other Agent Tools
+### Option 2: Instant GitHub Download via `degit` (Zero Publish Needed)
 
-You can link or copy the `prd` folder directly into your tool's custom instruction or skill directory:
-- **Claude Code:** `.claude/skills/prd`
-- **Cursor / Windsurf:** `.cursor/rules/prd` or include `prd/SKILL.md` in custom agent rules.
+Install directly from GitHub into your project without npm dependencies:
+
+```bash
+# Workspace install
+npx degit Ayomide-Philip/skills/prd .agent/skills/prd
+
+# Global Antigravity install
+npx degit Ayomide-Philip/skills/prd ~/.gemini/antigravity/skills/prd
+```
+
+---
+
+### Option 3: Manual Clone or Copy
+
+Clone the repository and place the `prd` folder into your skills path:
+
+```bash
+git clone https://github.com/Ayomide-Philip/skills.git
+```
+
+- **Antigravity Global:** Copy `prd/` to `~/.gemini/antigravity/skills/prd`
+- **Project Workspace:** Copy `prd/` to `.agent/skills/prd`
+
 
 ---
 

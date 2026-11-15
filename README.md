@@ -23,6 +23,7 @@ By packaging domain expertise into deterministic workflows with strict approval 
 The flagship skill in this repository. Generates structured, unambiguous, implementation-ready Product Requirements Documents in Markdown before writing any code, scaffolding projects, or installing dependencies.
 
 #### Core Value Proposition
+
 - **Zero Hallucination:** Never assumes or invents user requirements. Distinguishes confirmed decisions from assumptions.
 - **Adaptive Scope Tiers:** Automatically scales documentation depth to match project complexity:
   - **Light Tier:** Small features, micro-apps, or CLI scripts. Concise problem statement, user flow, numbered requirements (`FR-001`) with observable acceptance criteria.
@@ -113,7 +114,6 @@ git clone https://github.com/Ayomide-Philip/skills.git
 - **Antigravity Global:** Copy `prd/` to `~/.gemini/antigravity/skills/prd`
 - **Project Workspace:** Copy `prd/` to `.agent/skills/prd`
 
-
 ---
 
 ## How to Use
@@ -125,11 +125,15 @@ Invoke the skill naturally in chat or via slash command:
 ```text
 /prd
 ```
-*or*
+
+_or_
+
 ```text
 Build a PRD for an incident management war room platform
 ```
-*or*
+
+_or_
+
 ```text
 Create a PRD for adding OAuth2 social login to our existing web app
 ```
@@ -155,6 +159,7 @@ Create a PRD for adding OAuth2 social login to our existing web app
 ### 3. Controlling Scope Tiers
 
 You can override the automatic tier selection at any time:
+
 - `"Make it light"` &rarr; Generates a fast, minimal PRD (problem, primary flow, numbered FRs).
 - `"Use standard tier"` &rarr; Balances depth with agility for feature development.
 - `"Full PRD"` &rarr; Generates comprehensive enterprise specs with full MoSCoW prioritization, schemas, and error states.
@@ -181,6 +186,7 @@ We welcome new skills from the community! Every skill must adhere to the standar
 4. **`examples/`:** Provide realistic reference inputs and outputs so both humans and agents understand the intended output quality.
 
 To contribute:
+
 1. Fork this repository.
 2. Create your feature branch (`git checkout -b skill/my-new-skill`).
 3. Commit your changes (`git commit -m "feat: add my-new-skill"`).

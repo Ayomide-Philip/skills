@@ -49,9 +49,10 @@ ${color.bold}USAGE:${color.reset}
   ${color.green}npx agent-skills list${color.reset}                   List all available skills in this package
 
 ${color.bold}TARGET OPTIONS:${color.reset}
-  ${color.yellow}--workspace, -w${color.reset}      Install to project workspace (${color.dim}./.agent/skills/<skill>${color.reset}) [default]
   ${color.yellow}--global, -g${color.reset}         Install to Antigravity global (${color.dim}~/.gemini/antigravity/skills/<skill>${color.reset})
-  ${color.yellow}--claude${color.reset}             Install for Claude Code (${color.dim}./.claude/skills/<skill>${color.reset})
+  ${color.yellow}--claude-global${color.reset}      Install to Claude Code global (${color.dim}~/.claude/skills/<skill>${color.reset})
+  ${color.yellow}--workspace, -w${color.reset}      Install to project workspace (${color.dim}./.agent/skills/<skill>${color.reset})
+  ${color.yellow}--claude${color.reset}             Install to local project Claude (${color.dim}./.claude/skills/<skill>${color.reset})
   ${color.yellow}--cursor${color.reset}             Install for Cursor / Windsurf rules (${color.dim}./.cursor/rules/<skill>${color.reset})
   ${color.yellow}--dest <path>, -d${color.reset}      Install to a custom directory path
   ${color.yellow}--force, -f${color.reset}            Overwrite destination if it already exists
@@ -98,8 +99,12 @@ function resolveTargetDir(targetType, skillName, customPath) {
 
   switch (targetType) {
     case 'global':
+    case 'antigravity-global':
       return path.join(home, '.gemini', 'antigravity', 'skills', skillName);
+    case 'claude-global':
+      return path.join(home, '.claude', 'skills', skillName);
     case 'claude':
+    case 'claude-workspace':
       return path.join(cwd, '.claude', 'skills', skillName);
     case 'cursor':
       return path.join(cwd, '.cursor', 'rules', skillName);
@@ -141,8 +146,10 @@ async function installSkill(skillName, targetType, customPath, force) {
   console.log(`${color.dim}Destination:${color.reset} ${color.cyan}${targetDir}${color.reset}\n`);
 
   console.log(`${color.bold}Next steps:${color.reset}`);
-  if (targetType === 'global') {
+  if (targetType === 'global' || targetType === 'antigravity-global') {
     console.log(`  • The skill is now active globally across all your Antigravity agent sessions.`);
+  } else if (targetType === 'claude-global') {
+    console.log(`  • The skill is now active globally across all your Claude Code sessions.`);
   } else {
     console.log(`  • Commit the ${color.cyan}${path.relative(process.cwd(), targetDir)}${color.reset} directory to your project repository.`);
   }
@@ -171,12 +178,35 @@ async function runInteractive() {
     console.log(`Selected skill: ${color.green}${selectedSkill}${color.reset}`);
   }
 
-  console.log(`\n${color.bold}Where would you like to install '${selectedSkill}'?${color.reset}`);
-  console.log(`  [1] Project Workspace (${color.dim}./.agent/skills/${selectedSkill}${color.reset}) ${color.green}(Recommended)${color.reset}`);
-  console.log(`  [2] Antigravity Global (${color.dim}~/.gemini/antigravity/skills/${selectedSkill}${color.reset})`);
-  console.log(`  [3] Claude Code (${color.dim}./.claude/skills/${selectedSkill}${color.reset})`);
-  console.log(`  [4] Cursor / Windsurf Rules (${color.dim}./.cursor/rules/${selectedSkill}${color.reset})`);
-  console.log(`  [5] Custom Path...`);
+  console.log(`\n${color.bold}Where would you like to install '${selectedSkill}'?${color.reset}\n`);
+  console.log(`  ${color.bold}${color.magenta}GLOBAL (Available across all projects on this machine):${color.reset}`);
+  console.log(`  [1] Antigravity Global (${color.dim}~/.gemini/antigravity/skills/${selectedSkill}${color.reset})`);
+  console.log(`  [2] Claude Code Global (${color.dim}~/.claude/skills/${selectedSkill}${color.reset})\n`);
+
+  console.log(`  ${color.bold}${color.blue}LOCAL PROJECT (Current workspace directory only):${color.reset}`);
+  console.log(`  [3] Project Workspace (${color.dim}./.agent/skills/${selectedSkill}${color.reset}) ${color.green}(Recommended for repos)${color.reset}`);
+  console.log(`  [4] Claude Code Local (${color.dim}./.claude/skills/${selectedSkill}${color.reset})`);
+  console.log(`  [5] Cursor / Windsurf Rules (${color.dim}./.cursor/rules/${selectedSkill}${color.reset})\n`);
+
+  console.log(`  ${color.bold}CUSTOM:${color.reset}`);
+  console.log(`  [6] Custom Path...`);
+
+  const targetChoice = await prompt(`\nChoose target destination (1-6) [default 1]: `);
+  let targetType = 'global';
+  let customPath = '';
+
+  if (targetChoice === '1' || targetChoice === '') targetType = 'global';
+  else if (targetChoice === '2') targetType = 'claude-global';
+  else if (targetChoice === '3') targetType = 'workspace';
+  else if (targetChoice === '4') targetType = 'claude';
+  else if (targetChoice === '5') targetType = 'cursor';
+  else if (targetChoice === '6') {
+    targetType = 'custom';
+    customPath = await prompt(`Enter custom relative or absolute folder path: `);
+  }
+
+  await installSkill(selectedSkill, targetType, customPath, false);
+}
 
   const targetChoice = await prompt(`\nChoose target destination (1-5) [default 1]: `);
   let targetType = 'workspace';
@@ -223,6 +253,8 @@ async function main() {
       i++;
     } else if (arg === '--global' || arg === '-g') {
       targetType = 'global';
+    } else if (arg === '--claude-global') {
+      targetType = 'claude-global';
     } else if (arg === '--workspace' || arg === '-w') {
       targetType = 'workspace';
     } else if (arg === '--claude') {
